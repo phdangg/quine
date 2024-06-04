@@ -53,12 +53,15 @@ public class Quine {
         return methods.toString();
     }
     public static String sourceCode(Class<?> cl){
-        String sourceCode = cl.toGenericString() + " {\n" +
+        return cl.toGenericString() + " {\n" +
                 getDeclaredFields(cl) +
                 getConstructor(cl) +
                 getMethods(cl) +
-                "\n}";
-        return sourceCode;
+                "}";
+    }
 
+    @Override
+    public String toString() {
+        return sourceCode(Quine.class);
     }
 }
