@@ -23,29 +23,24 @@ public class Quine {
         return fields.toString();
     }
 
-    private static List<Map<String,String>> getArgNameAndType(String parameters){
+    private static String constructorWithArgName(String c, String parameters){
+        parameters = parameters.replace(",","");
         StringBuilder stringBuilder = new StringBuilder(parameters);
         stringBuilder.deleteCharAt(0).deleteCharAt(stringBuilder.length()-1);
-        List<Map<String,String>> result = new ArrayList<>();
+
         String[] parameterAndType = stringBuilder.toString().split(" ");
-        for (int i = 0; i < parameterAndType.length - 2; i += 2){
+        for (int i = 0; i < parameterAndType.length - 1; i += 2){
             String type = parameterAndType[i];
             String argName = parameterAndType[i+1];
-            result.add(Collections.singletonMap(argName,type));
+            c = c.replaceAll(type, type + " " +  argName);
         }
-        return result;
+        return getDefault(c);
     }
     public static String getConstructor(Class<?> cl){
         StringBuilder constructors = new StringBuilder();
         for (Constructor c : cl.getConstructors()){
-            String constructor = c.toString();
-            getArgNameAndType(Arrays.toString(c.getParameters()));
-
-            StringBuilder parameters = new StringBuilder();
-            for (Parameter p : c.getParameters()){
-                parameters.append(p.getType()).append("\n");
-            }
-            constructors.append("\t").append(constructor).append("\n").append(parameters);
+            String constructor = constructorWithArgName(c.toString(),Arrays.toString(c.getParameters()));
+            constructors.append("\t").append(constructor).append("\n");
         }
         return constructors.toString();
     }
@@ -55,20 +50,6 @@ public class Quine {
                 getConstructor(cl) +
                 "\n}";
         return sourceCode;
-
-//        for (Field f : cl.getDeclaredFields()){
-//            System.out.println(f);
-//        }
-//        while (cl != null) {
-//            for (Method m : cl.getDeclaredMethods()) {
-//                System.out.println(
-//                    Modifier.toString(m.getModifiers()) + " " +
-//                            m.getReturnType().getCanonicalName() + " " +
-//                            m.getName() +
-//                            Arrays.toString(m.getParameters()));
-//            }
-//            cl = cl.getSuperclass();
-//        }
 
     }
 }
