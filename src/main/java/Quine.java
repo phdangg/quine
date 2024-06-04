@@ -34,20 +34,29 @@ public class Quine {
             String argName = parameterAndType[i+1];
             c = c.replaceAll(type, type + " " +  argName);
         }
-        return getDefault(c);
+        return c;
     }
     public static String getConstructor(Class<?> cl){
         StringBuilder constructors = new StringBuilder();
         for (Constructor c : cl.getConstructors()){
             String constructor = constructorWithArgName(c.toString(),Arrays.toString(c.getParameters()));
-            constructors.append("\t").append(constructor).append("\n");
+            constructors.append("\t").append(getDefault(constructor)).append("\n");
         }
         return constructors.toString();
+    }
+    public static String getMethods(Class<?> cl){
+        StringBuilder methods = new StringBuilder();
+        for (Method m : cl.getMethods()){
+            String method = constructorWithArgName(m.toString(),Arrays.toString(m.getParameters()));
+            methods.append("\t").append(getDefault(method,cl)).append("\n");
+        }
+        return methods.toString();
     }
     public static String sourceCode(Class<?> cl){
         String sourceCode = cl.toGenericString() + " {\n" +
                 getDeclaredFields(cl) +
                 getConstructor(cl) +
+                getMethods(cl) +
                 "\n}";
         return sourceCode;
 
