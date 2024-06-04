@@ -6,9 +6,9 @@ public class Quine {
         String className = "";
         if (cl != null){
             className = cl.getName();
-            s = s.replaceAll(className + ".","");
+            s = s.replace(className + ".","");
         }
-        return s.replaceAll("java.lang.","");
+        return s.replace("java.lang.","");
     }
     private static String getDefault(String s){
         return getDefault(s,null);
@@ -32,7 +32,7 @@ public class Quine {
         for (int i = 0; i < parameterAndType.length - 1; i += 2){
             String type = parameterAndType[i];
             String argName = parameterAndType[i+1];
-            c = c.replaceAll(type, type + " " +  argName);
+            c = c.replace(type, type + " " +  argName);
         }
         return c;
     }
@@ -53,11 +53,12 @@ public class Quine {
         return methods.toString();
     }
     public static String sourceCode(Class<?> cl){
-        return cl.toGenericString() + " {\n" +
+        String sourceCode = cl.toGenericString() + " {\n" +
                 getDeclaredFields(cl) +
                 getConstructor(cl) +
                 getMethods(cl) +
                 "}";
+        return sourceCode;
     }
 
     @Override
